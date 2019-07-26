@@ -1,4 +1,4 @@
-package com.github.ctirpak.magicbattle;
+package com.github.ctirpak.magicbattle.commands;
 
 import org.bukkit.entity.Player;
 

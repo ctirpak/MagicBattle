@@ -8,7 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ctirpak.magicbattle.MagicCommand;
+import com.github.ctirpak.magicbattle.MessageManager.MessageType;
+import com.github.ctirpak.magicbattle.commands.MagicCommand;
 
 public class CommandManager implements CommandExecutor {
 	private TreeSet<MagicCommand> cmds = new TreeSet<MagicCommand>();
@@ -22,7 +23,7 @@ public class CommandManager implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(!(sender instanceof Player)) {
 			//send message
-			sender.sendMessage("You must be a Player to use this command");
+			MessageManager.getInstance().msg(sender, MessageType.BAD, "You must be a Player to use this command");
 			return true;
 		}
 		Player p = (Player) sender;
@@ -35,7 +36,7 @@ public class CommandManager implements CommandExecutor {
 			MagicCommand c = getCommand(args[0]);
 			
 			if(c == null) {
-				//send message
+				MessageManager.getInstance().msg(sender, MessageType.BAD, "That command doesn't exits!");
 				return true;
 			}
 			

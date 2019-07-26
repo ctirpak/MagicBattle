@@ -8,6 +8,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.github.ctirpak.magicbattle.MessageManager.MessageType;
+
 public class Arena {
 	
 	public enum ArenaState {DISABLED,WAITING,COUNTING_DOWN,STARTED;}
@@ -45,7 +47,7 @@ public class Arena {
 
 	public void addPlayer(Player p) {
 		if(currentPlayers >= numPlayers) {
-			//send message
+			MessageManager.getInstance().msg(p, MessageType.BAD, "There are too many players");
 			return;
 		}
 		data.add(new PlayerData(p));
