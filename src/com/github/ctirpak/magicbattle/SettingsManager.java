@@ -3,6 +3,7 @@ package com.github.ctirpak.magicbattle;
 import java.io.File;
 import java.io.IOException;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -44,5 +45,14 @@ public class SettingsManager {
 	@SuppressWarnings("unchecked")
 	public <T> T get(String path) {
 		return (T) arenaConfig.get(path);
+	}
+	public ConfigurationSection createConfigurationSection(String path) {
+		ConfigurationSection cs = arenaConfig.createSection(path);
+		try {
+			arenaConfig.save(arenaFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return cs;
 	}
 }

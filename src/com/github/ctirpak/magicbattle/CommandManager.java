@@ -9,27 +9,42 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ctirpak.magicbattle.MessageManager.MessageType;
+import com.github.ctirpak.magicbattle.commands.Create;
+import com.github.ctirpak.magicbattle.commands.Delete;
+import com.github.ctirpak.magicbattle.commands.ForceStart;
+import com.github.ctirpak.magicbattle.commands.ForceStop;
+import com.github.ctirpak.magicbattle.commands.Join;
+import com.github.ctirpak.magicbattle.commands.Leave;
 import com.github.ctirpak.magicbattle.commands.MagicCommand;
+import com.github.ctirpak.magicbattle.commands.Reload;
+import com.github.ctirpak.magicbattle.commands.SetLocation;
 
 public class CommandManager implements CommandExecutor {
 	private TreeSet<MagicCommand> cmds = new TreeSet<MagicCommand>();
 	
 	public void setup() {
-		//add commands
-		
+		cmds.add(new Create());
+		cmds.add(new Delete());
+		cmds.add(new ForceStart());
+		cmds.add(new ForceStop());
+		cmds.add(new Join());
+		cmds.add(new Leave());
+		cmds.add(new Reload());
+		cmds.add(new SetLocation());
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(!(sender instanceof Player)) {
-			//send message
 			MessageManager.getInstance().msg(sender, MessageType.BAD, "You must be a Player to use this command");
 			return true;
 		}
 		Player p = (Player) sender;
 		if(cmd.getName().equalsIgnoreCase("magicbattle")) {
 			if(args.length == 0) {
-				//send command usages
+				for(MagicCommand mc : cmds) {
+					MessageManager.getInstance().msg(sender, MessageType.INFO, "/mb " + aliases(mc) + " " + mc.getUsage() + " - " + mc.getMessage());
+				}
 				return true;
 			}
 
@@ -48,6 +63,15 @@ public class CommandManager implements CommandExecutor {
 		}
 		
 		return true;
+	}
+	
+	private String aliases(MagicCommand cmd) {
+		String fin = "";
+		
+		for(String a : cmd.getAliases()) {
+			fin += a + " | ";
+		}
+		return fin.substring(0,fin.lastIndexOf(" | "));
 	}
 	
 	private MagicCommand getCommand(String name) {

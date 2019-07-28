@@ -36,6 +36,9 @@ public class ArenaManager {
 		}
 	}
 	
+	public ArrayList<Arena> getArenas() {
+		return arenas;
+	}
 	public Arena getArena(int id) {
 		for(Arena a : arenas) {
 			if(a.getID() == id) return a;
@@ -47,5 +50,13 @@ public class ArenaManager {
 			if(a.containsPlayer(p)) return a;
 		}
 		return null;
+	}
+	public void start() {
+		// TODO need to complete
+		
+	}
+	public void stop() {
+		// TODO need to complete
+		
 	}
 }

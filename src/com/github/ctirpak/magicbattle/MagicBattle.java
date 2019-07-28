@@ -10,6 +10,11 @@ public class MagicBattle extends JavaPlugin {
 	public void onEnable() {
 		SettingsManager.getInstance().setup(this);
 		ArenaManager.getInstance().setupArenas();
+		
+		CommandManager cm = new CommandManager();
+		cm.setup();
+		getCommand("magicbattle").setExecutor(cm);
+		
 		System.out.println(pdfFile.getName() + " [version " + pdfFile.getVersion() + "] has been enabled");
 	}
 	
