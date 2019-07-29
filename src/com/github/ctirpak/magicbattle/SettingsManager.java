@@ -18,10 +18,12 @@ public class SettingsManager {
 		return instance;
 	}
 	
+	private Plugin p;
 	private File arenaFile;
 	private FileConfiguration arenaConfig;
 	
 	public void setup(Plugin p) {
+		this.p = p;
 		if(!p.getDataFolder().exists()) p.getDataFolder().mkdir();
 		arenaFile = new File(p.getDataFolder(), "arenas.yml");
 		if(!arenaFile.exists()) {
@@ -54,5 +56,8 @@ public class SettingsManager {
 			e.printStackTrace();
 		}
 		return cs;
+	}
+	public Plugin getPlugin() {
+		return p;
 	}
 }
