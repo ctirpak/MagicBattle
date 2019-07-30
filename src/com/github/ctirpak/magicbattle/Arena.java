@@ -1,6 +1,7 @@
 package com.github.ctirpak.magicbattle;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -54,7 +55,7 @@ public class Arena {
 		}
 		data.add(new PlayerData(p));
 		p.getInventory().clear();
-		//add wand
+		p.getInventory().addItem(Wand.values()[new Random().nextInt(Wand.values().length)].createItemStack());
 		p.teleport(spawnPoint);
 		currentPlayers++;
 	}
