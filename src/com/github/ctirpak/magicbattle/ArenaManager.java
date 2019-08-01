@@ -18,7 +18,7 @@ public class ArenaManager {
 	private ArrayList<Arena> arenas = new ArrayList<Arena>();
 	
 	public void setupArenas() {
-		for(String key : SettingsManager.getInstance().<ConfigurationSection>get("arenas").getKeys(true)) {
+		for(String key : SettingsManager.getArenas().<ConfigurationSection>get("arenas").getKeys(true)) {
 			arenas.add(new Arena(Integer.parseInt(key)));
 			/*
 			 * arenas:

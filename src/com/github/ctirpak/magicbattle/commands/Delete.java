@@ -35,7 +35,7 @@ public class Delete extends MagicCommand {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "Arena " + args[0] + " is ingame!");
 		}
 		
-		SettingsManager.getInstance().set(id + "", null);
+		SettingsManager.getArenas().set(id + "", null);
 		ArenaManager.getInstance().setupArenas();
 	}
 	public Delete() {

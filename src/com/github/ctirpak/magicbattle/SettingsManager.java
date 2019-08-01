@@ -9,55 +9,54 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 public class SettingsManager {
-	private static SettingsManager instance = null;
-	private SettingsManager() {}
-	public static SettingsManager getInstance() {
-		if(instance == null) {
-			instance = new SettingsManager();
-		}
-		return instance;
-	}
+	private static SettingsManager arenas = new SettingsManager("arenas");
+	private static SettingsManager lobbySigns = new SettingsManager("lobbysigns");
 	
-	private Plugin p;
-	private File arenaFile;
-	private FileConfiguration arenaConfig;
+	private File file;
+	private FileConfiguration config;
 	
-	public void setup(Plugin p) {
-		this.p = p;
-		if(!p.getDataFolder().exists()) p.getDataFolder().mkdir();
-		arenaFile = new File(p.getDataFolder(), "arenas.yml");
-		if(!arenaFile.exists()) {
+	private SettingsManager(String fileName) {
+		if(!MagicBattle.getPlugin().getDataFolder().exists()) MagicBattle.getPlugin().getDataFolder().mkdir();
+		
+		this.file = new File(MagicBattle.getPlugin().getDataFolder(), fileName + ".yml");
+		
+		if(!file.exists()) {
 			try {
-				arenaFile.createNewFile();
+				file.createNewFile();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		arenaConfig = YamlConfiguration.loadConfiguration(arenaFile);
+		this.config = YamlConfiguration.loadConfiguration(file);
 	}
 	
+	public static SettingsManager getArenas() {
+		return arenas;
+	}
+	public static SettingsManager getLobbySigns() {
+		return lobbySigns;
+	}
+
 	public void set(String path, Object value) {
-		arenaConfig.set(path,value);
+		config.set(path,value);
 		try {
-			arenaConfig.save(arenaFile);
+			config.save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	@SuppressWarnings("unchecked")
-	public <T> T get(String path) {
-		return (T) arenaConfig.get(path);
-	}
 	public ConfigurationSection createConfigurationSection(String path) {
-		ConfigurationSection cs = arenaConfig.createSection(path);
+		ConfigurationSection cs = config.createSection(path);
 		try {
-			arenaConfig.save(arenaFile);
+			config.save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return cs;
 	}
-	public Plugin getPlugin() {
-		return p;
+	@SuppressWarnings("unchecked")
+	public <T> T get(String path) {
+		return (T) config.get(path);
 	}
+
 }

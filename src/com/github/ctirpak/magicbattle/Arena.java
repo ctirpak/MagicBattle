@@ -27,16 +27,10 @@ public class Arena {
 	protected Arena(int id) {
 		this.id = id;
 		this.data = new ArrayList<PlayerData>();
-		this.numPlayers = SettingsManager.getInstance().get("arenas." + id + ".numPlayers");
+		this.numPlayers = SettingsManager.getArenas().get("arenas." + id + ".numPlayers");
 		
-		ConfigurationSection s = SettingsManager.getInstance().get("arenas." + id + ".spawn");
-		this.spawnPoint = new Location(
-				Bukkit.getServer().getWorld(s.getString("world")),
-				s.getDouble("x"),
-				s.getDouble("y"),
-				s.getDouble("z"),
-				(float) s.getDouble("pitch"),
-				(float) s.getDouble("yaw"));
+		ConfigurationSection s = SettingsManager.getArenas().get("arenas." + id + ".spawn");
+		this.spawnPoint = LocationUtil.locationFromConfig(s, true);
 		this.state = ArenaState.WAITING;
 	}
 	
@@ -75,7 +69,7 @@ public class Arena {
 	public void start() {
 		this.state = ArenaState.COUNTING_DOWN;
 		final Countdown c = new Countdown(30, "Game starting in %t seconds!", this, 30, 20, 10, 5, 4, 3, 2, 1);
-		this.taskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(SettingsManager.getInstance().getPlugin(), new Runnable() {
+		this.taskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(MagicBattle.getPlugin(), new Runnable() {
 			public void run() {
 				if(!c.isDone()) {
 					c.run();

@@ -13,7 +13,7 @@ public class Create extends MagicCommand {
 	public void onCommand(Player p, String[] args) {
 		int id = ArenaManager.getInstance().getArenas().size() + 1;
 		
-		SettingsManager.getInstance().createConfigurationSection(id + "");
+		SettingsManager.getArenas().createConfigurationSection(id + "");
 		MessageManager.getInstance().msg(p, MessageType.GOOD, "Created Arena " + id + "!");
 		ArenaManager.getInstance().setupArenas();
 		
