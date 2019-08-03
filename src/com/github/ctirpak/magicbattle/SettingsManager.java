@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 public class SettingsManager {
 	private static SettingsManager arenas = new SettingsManager("arenas");
