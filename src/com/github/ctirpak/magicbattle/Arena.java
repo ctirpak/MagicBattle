@@ -5,12 +5,14 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.ctirpak.magicbattle.Arena.ArenaState;
 import com.github.ctirpak.magicbattle.MessageManager.MessageType;
+import com.github.ctirpak.magicbattle.listeners.SignManager;
 
 public class Arena {
 	
@@ -22,6 +24,7 @@ public class Arena {
 	private int currentPlayers = 0;
 	protected ArenaState state = ArenaState.DISABLED;
 	private ArrayList<PlayerData> data;
+	private ArrayList<Sign> signs;
 	private Location spawnPoint;
 	
 	protected Arena(int id) {
@@ -32,6 +35,7 @@ public class Arena {
 		ConfigurationSection s = SettingsManager.getArenas().get("arenas." + id + ".spawn");
 		this.spawnPoint = LocationUtil.locationFromConfig(s, true);
 		this.state = ArenaState.WAITING;
+		this.signs = SignManager.getSigns(this);
 	}
 	
 	public int getID() {
@@ -42,6 +46,10 @@ public class Arena {
 		return state;
 	}
 
+	public int getCurrentPlayers() {
+		return currentPlayers;
+	}
+	
 	public void addPlayer(Player p) {
 		if(currentPlayers >= numPlayers) {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "There are too many players");
@@ -52,12 +60,22 @@ public class Arena {
 		p.getInventory().addItem(Wand.values()[new Random().nextInt(Wand.values().length)].createItemStack());
 		p.teleport(spawnPoint);
 		currentPlayers++;
+		
+		for(Sign s : signs) {
+			s.setLine(2, currentPlayers + "");
+			s.update();
+		}
 	}
 	public void removePlayer(Player p) {
 		PlayerData d = getPlayerData(p);
 		d.restorePlayer();
 		data.remove(d);
 		currentPlayers --;
+		
+		for(Sign s : signs) {
+			s.setLine(2, currentPlayers + "");
+			s.update();
+		}
 	}
 	private PlayerData getPlayerData(Player p) {
 		for(PlayerData d : data) {
@@ -73,6 +91,11 @@ public class Arena {
 			public void run() {
 				if(!c.isDone()) {
 					c.run();
+					state = ArenaState.STARTED;
+					for(Sign s : signs) {
+						s.setLine(3, getState().toString());
+						s.update();
+					}
 				} else
 					Bukkit.getServer().getScheduler().cancelTask(taskId);
 			}
@@ -82,6 +105,11 @@ public class Arena {
 	public void stop() {
 		for(PlayerData pd : data) {
 			pd.restorePlayer();
+		}
+		state = ArenaState.WAITING;
+		for(Sign s : signs) {
+			s.setLine(3, getState().toString());
+			s.update();
 		}
 	}
 
@@ -94,6 +122,7 @@ public class Arena {
 			MessageManager.getInstance().msg(d.getPlayer(), type, messages);
 		}
 	}
+
 }
 
 class PlayerData {

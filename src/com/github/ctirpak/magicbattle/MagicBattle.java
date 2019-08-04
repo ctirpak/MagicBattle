@@ -11,13 +11,14 @@ import com.github.ctirpak.magicbattle.listeners.PlayerDeath;
 import com.github.ctirpak.magicbattle.listeners.PlayerInteract;
 import com.github.ctirpak.magicbattle.listeners.PlayerLeave;
 import com.github.ctirpak.magicbattle.listeners.PlayerLoseHunger;
+import com.github.ctirpak.magicbattle.listeners.SignManager;
 
 public class MagicBattle extends JavaPlugin {
 	private PluginDescriptionFile pdfFile = getDescription();
 
 	@Override
 	public void onEnable() {
-		//SettingsManager.getArenas().setup(this);
+		Bukkit.getServer().getPluginManager().registerEvents(new SignManager(), this);
 		ArenaManager.getInstance().setupArenas();
 		
 		CommandManager cm = new CommandManager();
@@ -28,7 +29,7 @@ public class MagicBattle extends JavaPlugin {
 		 * Listeners:
 		 * 
 		 * done: BlockBreak.java
-		 * TODO: LobbySign.java
+		 * done: LobbySign.java
 		 * done: PlayerDeath.java
 		 * done: PlayerInteract.java
 		 * done: PlayerLeave.java

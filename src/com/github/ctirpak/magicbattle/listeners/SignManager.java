@@ -1,13 +1,16 @@
 package com.github.ctirpak.magicbattle.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.github.ctirpak.magicbattle.Arena;
 import com.github.ctirpak.magicbattle.ArenaManager;
@@ -23,7 +26,7 @@ public class SignManager implements Listener {
 	 * Setting signs
 	 */
 	
-	private HashMap<Sign, Arena> signs = new HashMap<Sign, Arena>();
+	private static HashMap<Sign, Integer> signs = new HashMap<Sign, Integer>();
 	
 	public SignManager() {
 		/*
@@ -39,17 +42,29 @@ public class SignManager implements Listener {
 		 *     
 		 */
 		
+		//loads signs
 		for(String str : SettingsManager.getLobbySigns().<ConfigurationSection>get("signs").getKeys(true)) {
 			ConfigurationSection section = SettingsManager.getLobbySigns().get("signs." + str);
 			
 			Location loc = LocationUtil.locationFromConfig(section.getConfigurationSection("location"), false);
 			Sign s = (Sign) loc.getBlock().getState();
-			Arena a = ArenaManager.getInstance().getArena(section.getInt("arenaNumber"));
 			
-			signs.put(s, a);
+			signs.put(s, section.getInt("arenaNumber"));
 		}
 	}
 	
+	public static ArrayList<Sign> getSigns(Arena a) {
+		ArrayList<Sign> s = new ArrayList<Sign>();
+		
+		for(Sign sign : signs.keySet()) {
+			if(ArenaManager.getInstance().getArena(signs.get(sign)) == a) {
+				s.add(sign);
+			}
+		}
+		return s;
+	}
+	
+	@EventHandler
 	public void onSignChange(SignChangeEvent e) {
 		if(e.getLine(0).equalsIgnoreCase("[MagicBattle]")) {
 			int id;
@@ -66,7 +81,32 @@ public class SignManager implements Listener {
 				return;
 			}
 			
+			ConfigurationSection section = SettingsManager.getLobbySigns().createConfigurationSection("signs." + SettingsManager.getLobbySigns().<ConfigurationSection>get("signs").getKeys(true).size() + 1);
 			
+			ConfigurationSection location = section.createSection("location");
+			location.set("world", e.getBlock().getWorld().getName());
+			location.set("x", e.getBlock().getLocation().getX());
+			location.set("y", e.getBlock().getLocation().getY());
+			location.set("z", e.getBlock().getLocation().getZ());
+			
+			section.set("arenaNumber", a.getID());
+			
+			signs.put((Sign) e.getBlock().getState(), a.getID());
+
+			e.setLine(2, "Players: " + a.getCurrentPlayers());
+			e.setLine(3, "State: " + a.getState().toString());
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent e) {
+		if(!(e.getAction() == Action.RIGHT_CLICK_AIR) && !(e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+		
+		if(e.getClickedBlock().getState() instanceof Sign) {
+			Sign s = (Sign) e.getClickedBlock().getState();
+			if(s.getLine(0).equalsIgnoreCase("[MagicBattle]")) {
+				ArenaManager.getInstance().getArena(Integer.parseInt(s.getLine(1))).addPlayer(e.getPlayer());
+			}
 		}
 	}
 
