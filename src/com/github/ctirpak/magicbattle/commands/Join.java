@@ -25,7 +25,6 @@ public class Join extends MagicCommand {
 			 id = Integer.parseInt(args[0]);
 		} catch (Exception e) {
 			MessageManager.getInstance().msg(p, MessageType.BAD, args[0] + " is not a number!");
-//			e.printStackTrace();
 		}
 		Arena a = ArenaManager.getInstance().getArena(id);
 		if(a == null) {

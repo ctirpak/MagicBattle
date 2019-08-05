@@ -18,7 +18,11 @@ public class ArenaManager {
 	private ArrayList<Arena> arenas = new ArrayList<Arena>();
 	
 	public void setupArenas() {
-		for(String key : SettingsManager.getArenas().<ConfigurationSection>get("arenas").getKeys(true)) {
+		if(SettingsManager.getArenas().<ConfigurationSection>get("arenas") == null) {
+			SettingsManager.getArenas().createConfigurationSection("arenas");
+		}
+		arenas.clear();
+		for(String key : SettingsManager.getArenas().<ConfigurationSection>get("arenas").getKeys(false)) {
 			arenas.add(new Arena(Integer.parseInt(key)));
 			/*
 			 * arenas:
@@ -50,13 +54,5 @@ public class ArenaManager {
 			if(a.containsPlayer(p)) return a;
 		}
 		return null;
-	}
-	public void start() {
-		// TODO need to complete
-		
-	}
-	public void stop() {
-		// TODO need to complete
-		
 	}
 }

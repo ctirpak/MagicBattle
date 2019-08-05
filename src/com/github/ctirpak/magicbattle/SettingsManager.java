@@ -58,4 +58,8 @@ public class SettingsManager {
 		return (T) config.get(path);
 	}
 
+	public boolean contains(String path) {
+		return config.contains(path);
+	}
+
 }

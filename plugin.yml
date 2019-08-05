@@ -1,13 +1,13 @@
 name: MagicBattle
 author: RandalSix
 main: com.github.ctirpak.magicbattle.MagicBattle
-version: 1.0
+version: 1.0.1
 dscription: Magic Battle Plugin
 api-version: 1.14
 
 commands:
-  hello:
-    usage: /<command>
-    aliases: [hello, helloworld, hw]
-    description: Sends the player a hello message
+    magicbattle:
+        usage: /<command> <args> [opt args]
+        aliases: [mb]
+        description: MagicBattle command!
     

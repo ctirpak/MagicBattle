@@ -34,7 +34,7 @@ public class ForceStart extends MagicCommand {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "Arena " + args[0] + " is ingame!");
 		}
 
-		ArenaManager.getInstance().start();
+		a.start();
 		MessageManager.getInstance().msg(p, MessageType.GOOD, "Force started Arena " + args[0] + "!");
 	}
 

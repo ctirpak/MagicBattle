@@ -3,6 +3,7 @@ package com.github.ctirpak.magicbattle.commands;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import com.github.ctirpak.magicbattle.ArenaManager;
 import com.github.ctirpak.magicbattle.MessageManager;
 import com.github.ctirpak.magicbattle.MessageManager.MessageType;
 import com.github.ctirpak.magicbattle.SettingsManager;
@@ -28,14 +29,15 @@ public class SetLocation extends MagicCommand {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "There is no arena with id " + args[0]);
 		}
 		
-		ConfigurationSection s = SettingsManager.getArenas().createConfigurationSection(id + ".spawn");
+		ConfigurationSection s = SettingsManager.getArenas().createConfigurationSection("arenas." + id + ".spawn");
 		
 		s.set("world",p.getWorld().getName());
 		s.set("x",p.getLocation().getX());
 		s.set("y",p.getLocation().getY());
 		s.set("z",p.getLocation().getZ());
 		
-		SettingsManager.getArenas().set(id + ".spawn", s);
+		SettingsManager.getArenas().set("arenas." + id + ".spawn", s);
+		ArenaManager.getInstance().setupArenas();
 		MessageManager.getInstance().msg(p, MessageType.GOOD, "Set spawn for arena " + args[0]);
 		
 

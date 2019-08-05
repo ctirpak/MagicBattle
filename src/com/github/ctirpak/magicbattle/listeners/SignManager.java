@@ -42,6 +42,11 @@ public class SignManager implements Listener {
 		 *     
 		 */
 		
+		if(!SettingsManager.getLobbySigns().contains("signs")) {
+			SettingsManager.getLobbySigns().createConfigurationSection("signs");
+		}
+		
+		
 		//loads signs
 		for(String str : SettingsManager.getLobbySigns().<ConfigurationSection>get("signs").getKeys(true)) {
 			ConfigurationSection section = SettingsManager.getLobbySigns().get("signs." + str);
@@ -101,6 +106,7 @@ public class SignManager implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		if(!(e.getAction() == Action.RIGHT_CLICK_AIR) && !(e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+		if(e.getClickedBlock() == null || e.getClickedBlock().getState() == null) return;
 		
 		if(e.getClickedBlock().getState() instanceof Sign) {
 			Sign s = (Sign) e.getClickedBlock().getState();

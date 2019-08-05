@@ -1,7 +1,8 @@
 package com.github.ctirpak.magicbattle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.TreeSet;
+import java.util.Vector;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +21,8 @@ import com.github.ctirpak.magicbattle.commands.Reload;
 import com.github.ctirpak.magicbattle.commands.SetLocation;
 
 public class CommandManager implements CommandExecutor {
-	private TreeSet<MagicCommand> cmds = new TreeSet<MagicCommand>();
+	//private TreeSet<MagicCommand> cmds = new TreeSet<MagicCommand>();
+	private ArrayList<MagicCommand> cmds = new ArrayList<MagicCommand>();
 	
 	public void setup() {
 		cmds.add(new Create());
@@ -55,7 +57,8 @@ public class CommandManager implements CommandExecutor {
 				return true;
 			}
 			
-			TreeSet<String> a = new TreeSet<String>(Arrays.asList(args));
+			//TreeSet<String> a = new TreeSet<String>(Arrays.asList(args));
+			Vector<String> a = new Vector<String>(Arrays.asList(args));
 			a.remove(0);
 			args = a.toArray(new String[a.size()]);
 			c.onCommand(p, args);
