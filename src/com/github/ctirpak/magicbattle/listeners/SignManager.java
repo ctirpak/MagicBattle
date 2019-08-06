@@ -48,10 +48,14 @@ public class SignManager implements Listener {
 		
 		
 		//loads signs
-		for(String str : SettingsManager.getLobbySigns().<ConfigurationSection>get("signs").getKeys(true)) {
+		for(String str : SettingsManager.getLobbySigns().<ConfigurationSection>get("signs").getKeys(false)) {
+			//System.out.println("lobby sign: " + str);
 			ConfigurationSection section = SettingsManager.getLobbySigns().get("signs." + str);
+			//System.out.println(section);
 			
 			Location loc = LocationUtil.locationFromConfig(section.getConfigurationSection("location"), false);
+			//System.out.println("config section: " + section.getConfigurationSection("location"));
+			//System.out.println("location: " + loc);
 			Sign s = (Sign) loc.getBlock().getState();
 			
 			signs.put(s, section.getInt("arenaNumber"));

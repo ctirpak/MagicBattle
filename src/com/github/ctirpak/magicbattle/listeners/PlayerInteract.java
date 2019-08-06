@@ -26,6 +26,7 @@ public class PlayerInteract implements Listener {
 			if(stickMeta.getDisplayName().equals(w.getFullName())) {
 				if (ArenaManager.getInstance().getArena(e.getPlayer()).getState() != ArenaState.STARTED) {
 					MessageManager.getInstance().msg(e.getPlayer(), MessageType.BAD, "You can't use your wand until the battle starts.");
+					return;
 				}
 				e.setCancelled(true);
 				w.run(e);
