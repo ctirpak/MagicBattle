@@ -89,7 +89,7 @@ public class SignManager implements Listener {
 			ConfigurationSection section = SettingsManager.getLobbySigns().createConfigurationSection("signs." + SettingsManager.getLobbySigns().<ConfigurationSection>get("signs").getKeys(true).size() + 1);
 			
 			ConfigurationSection location = section.createSection("location");
-			location.set("world", e.getBlock().getWorld().getName());
+			location.set("world", e.getBlock().getLocation().getWorld().getName());
 			location.set("x", e.getBlock().getLocation().getX());
 			location.set("y", e.getBlock().getLocation().getY());
 			location.set("z", e.getBlock().getLocation().getZ());
