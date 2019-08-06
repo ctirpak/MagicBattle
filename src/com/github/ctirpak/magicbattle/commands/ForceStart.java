@@ -31,11 +31,11 @@ public class ForceStart extends MagicCommand {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "There is no arena with id " + args[0]);
 		}
 		if (a.getState() == ArenaState.STARTED) {
-			MessageManager.getInstance().msg(p, MessageType.BAD, "Arena " + args[0] + " is ingame!");
+			MessageManager.getInstance().msg(p, MessageType.BAD, "Arena " + id + " is ingame!");
 		}
 
 		a.start();
-		MessageManager.getInstance().msg(p, MessageType.GOOD, "Force started Arena " + args[0] + "!");
+		MessageManager.getInstance().msg(p, MessageType.GOOD, "Force started Arena " + id + "!");
 	}
 
 	public ForceStart() {

@@ -13,6 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.github.ctirpak.magicbattle.MessageManager.MessageType;
+
 public enum Wand {
 	FIRE("Fire", ChatColor.RED, new WandRunnable() {
 		@Override
@@ -29,7 +31,8 @@ public enum Wand {
 			for(Entity en : e.getPlayer().getNearbyEntities(10,10,10)) {
 				if(en instanceof Player) {
 					((Player) en).addPotionEffect(new PotionEffect(PotionEffectType.POISON, 10, 1));
-					((Player) en).sendMessage(ChatColor.DARK_PURPLE + "You have been poisoned by " + e.getPlayer().getName() + "!");
+					MessageManager.getInstance().msg(e.getPlayer(), MessageType.INFO, ChatColor.DARK_PURPLE + "You have been poisoned by " + e.getPlayer().getName() + "!");
+					MessageManager.getInstance().msg(e.getPlayer(), MessageType.INFO, ChatColor.DARK_PURPLE + "You have poisoned " + ((Player) en).getName() + "!");
 				}
 			}
 			Fireball fb = e.getPlayer().launchProjectile(Fireball.class);

@@ -7,7 +7,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.github.ctirpak.magicbattle.Arena.ArenaState;
 import com.github.ctirpak.magicbattle.ArenaManager;
+import com.github.ctirpak.magicbattle.MessageManager;
+import com.github.ctirpak.magicbattle.MessageManager.MessageType;
 import com.github.ctirpak.magicbattle.Wand;
 
 public class PlayerInteract implements Listener {
@@ -21,6 +24,9 @@ public class PlayerInteract implements Listener {
 		
 		for(Wand w : Wand.values()) {
 			if(stickMeta.getDisplayName().equals(w.getFullName())) {
+				if (ArenaManager.getInstance().getArena(e.getPlayer()).getState() != ArenaState.STARTED) {
+					MessageManager.getInstance().msg(e.getPlayer(), MessageType.BAD, "You can't use your wand until the battle starts.");
+				}
 				e.setCancelled(true);
 				w.run(e);
 			}

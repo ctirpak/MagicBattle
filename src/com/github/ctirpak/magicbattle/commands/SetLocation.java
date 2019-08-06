@@ -25,7 +25,7 @@ public class SetLocation extends MagicCommand {
 			return;
 		}
 		
-		if(SettingsManager.getArenas().<ConfigurationSection>get(id + "") == null) {
+		if(SettingsManager.getArenas().<ConfigurationSection>get("arenas." + id) == null) {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "There is no arena with id " + args[0]);
 		}
 		

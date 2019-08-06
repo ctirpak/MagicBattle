@@ -31,11 +31,11 @@ public class ForceStop extends MagicCommand {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "There is no arena with id " + args[0]);
 		}
 		if (a.getState() != ArenaState.STARTED) {
-			MessageManager.getInstance().msg(p, MessageType.BAD, "Arena " + args[0] + " is not running!");
+			MessageManager.getInstance().msg(p, MessageType.BAD, "Arena " + id + " is not running!");
 		}
 
 		a.stop();
-		MessageManager.getInstance().msg(p, MessageType.GOOD, "Force stopped Arena " + args[0] + "!");
+		MessageManager.getInstance().msg(p, MessageType.GOOD, "Force stopped Arena " + a.getID() + "!");
 	}
 
 	public ForceStop() {

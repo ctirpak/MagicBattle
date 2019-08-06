@@ -94,7 +94,7 @@ public class SignManager implements Listener {
 			location.set("y", e.getBlock().getLocation().getY());
 			location.set("z", e.getBlock().getLocation().getZ());
 			
-			section.set("arenaNumber", a.getID());
+			section.set("arenaNumber", id);
 			
 			signs.put((Sign) e.getBlock().getState(), a.getID());
 
