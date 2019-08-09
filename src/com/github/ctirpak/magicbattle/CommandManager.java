@@ -24,7 +24,7 @@ public class CommandManager implements CommandExecutor {
 	//private TreeSet<MagicCommand> cmds = new TreeSet<MagicCommand>();
 	private ArrayList<MagicCommand> cmds = new ArrayList<MagicCommand>();
 	
-	public void setup() {
+	public CommandManager() {
 		cmds.add(new Create());
 		cmds.add(new Delete());
 		cmds.add(new ForceStart());
@@ -80,6 +80,7 @@ public class CommandManager implements CommandExecutor {
 	private MagicCommand getCommand(String name) {
 		for(MagicCommand cmd : cmds) {
 			if(cmd.getClass().getSimpleName().equalsIgnoreCase(name)) return cmd;
+			for (String alias : cmd.getAliases()) if (name.equalsIgnoreCase(alias)) return cmd;
 		}
 		return null;
 	}

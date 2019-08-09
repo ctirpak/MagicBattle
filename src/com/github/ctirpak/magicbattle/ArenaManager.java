@@ -6,8 +6,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 public class ArenaManager {
-	private static ArenaManager instance = null;
 	private ArenaManager() {}
+	private static ArenaManager instance = null;
 	public static ArenaManager getInstance() {
 		if(instance == null) {
 			instance = new ArenaManager();

@@ -102,8 +102,8 @@ public class SignManager implements Listener {
 			
 			signs.put((Sign) e.getBlock().getState(), a.getID());
 
-			e.setLine(2, "Players: " + a.getCurrentPlayers());
-			e.setLine(3, "State: " + a.getState().toString());
+			e.setLine(2, a.getCurrentPlayers() + " Players");
+			e.setLine(3, a.getState().toString());
 		}
 	}
 	

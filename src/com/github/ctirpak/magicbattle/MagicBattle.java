@@ -18,14 +18,13 @@ public class MagicBattle extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		PluginManager pm = Bukkit.getServer().getPluginManager();
+		
+		pm.registerEvents(new SignManager(), this);
 		ArenaManager.getInstance().setupArenas();
 		
-		CommandManager cm = new CommandManager();
-		cm.setup();
-		getCommand("magicbattle").setExecutor(cm);
-		
-		PluginManager pm = Bukkit.getServer().getPluginManager();
-		pm.registerEvents(new SignManager(), this);
+		getCommand("magicbattle").setExecutor(new CommandManager());
+
 		pm.registerEvents(new BlockBreak(), this);
 		pm.registerEvents(new PlayerDeath(), this);
 		pm.registerEvents(new PlayerInteract(), this);
