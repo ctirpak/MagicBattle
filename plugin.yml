@@ -1,7 +1,7 @@
 name: MagicBattle
 author: RandalSix
 main: com.github.ctirpak.magicbattle.MagicBattle
-version: 1.0.5
+version: 1.0.6
 dscription: Magic Battle Plugin
 api-version: 1.14
 
