@@ -49,24 +49,33 @@ public class SignManager implements Listener {
 		
 		//loads signs
 		for(String str : SettingsManager.getLobbySigns().<ConfigurationSection>get("signs").getKeys(false)) {
-			//System.out.println("lobby sign: " + str);
+			System.out.println("lobby sign: " + str);
 			ConfigurationSection section = SettingsManager.getLobbySigns().get("signs." + str);
-			//System.out.println(section);
+			System.out.println("lobby sign: " + str + " section: " + section);
 			
 			Location loc = LocationUtil.locationFromConfig(section.getConfigurationSection("location"), false);
-			//System.out.println("config section: " + section.getConfigurationSection("location"));
-			//System.out.println("location: " + loc);
+			System.out.println("config section: " + section.getConfigurationSection("location"));
+			System.out.println("location: " + loc);
 			Sign s = (Sign) loc.getBlock().getState();
 			
+			System.out.println("Sign: " + s.getLine(0).toString() + "; " + s.getLine(1).toString() + "; " + s.getLine(2).toString() + "; " + s.getLine(3).toString() + "; ");
 			signs.put(s, section.getInt("arenaNumber"));
+			System.out.println("Arena Number: " + section.getInt("arenaNumber"));
 		}
+		System.out.println("Sign count: " + signs.size());
 	}
 	
 	public static ArrayList<Sign> getSigns(Arena a) {
 		ArrayList<Sign> s = new ArrayList<Sign>();
-		
+		System.out.println("getSigns:");
 		for(Sign sign : signs.keySet()) {
-			if(ArenaManager.getInstance().getArena(signs.get(sign)) == a) {
+			System.out.println("Sign: " + sign.toString());
+			System.out.println("Arena ID: " + a.getID());
+			System.out.println("Sign: " + sign);
+			System.out.println("Sign: " + signs.get(sign));
+			System.out.println("Arena ID Calc: " + ArenaManager.getInstance().getArena(signs.get(sign)));
+//			if(ArenaManager.getInstance().getArena(signs.get(sign)) == a) {
+			if(signs.get(sign) == a.getID()) {
 				s.add(sign);
 			}
 		}

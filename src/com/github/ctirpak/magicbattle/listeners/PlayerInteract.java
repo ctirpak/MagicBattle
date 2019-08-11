@@ -19,6 +19,7 @@ public class PlayerInteract implements Listener {
 		if (ArenaManager.getInstance().getArena(e.getPlayer()) == null) return;
 		if(!(e.getAction() == Action.RIGHT_CLICK_AIR) && !(e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
 		if(!(e.getPlayer().getInventory().getItemInMainHand().getType() == Material.STICK)) return;
+		
 
 		ItemMeta stickMeta = e.getItem().getItemMeta();
 		

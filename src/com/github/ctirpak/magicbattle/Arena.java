@@ -51,12 +51,18 @@ public class Arena {
 	}
 
 	public void addPlayer(Player p) {
+		System.out.println("addPlayer");
 		if (currentPlayers >= numPlayers) {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "There are too many players");
 			return;
 		}
 		if (spawnPoint == null) {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "Spawn point not set!");
+			return;
+		}
+		
+		if(containsPlayer(p)) {
+			MessageManager.getInstance().msg(p, MessageType.BAD, "You are already in this arena!");
 			return;
 		}
 		data.add(new PlayerData(p));
@@ -68,10 +74,11 @@ public class Arena {
 		}
 		p.teleport(spawnPoint);
 		currentPlayers++;
-
+		System.out.println("Player count: " + currentPlayers);
+		System.out.println("Sign count: " + signs.size());
 		for (Sign s : signs) {
 			s.setLine(2, currentPlayers + " Players");
-			s.update();
+			s.update(true);
 		}
 	}
 
@@ -83,7 +90,8 @@ public class Arena {
 
 		for (Sign s : signs) {
 			s.setLine(2, currentPlayers + " Players");
-			s.update();
+			s.update(true);
+			System.out.println(s.getLine(2));
 		}
 		if (currentPlayers == 1) {
 			stop(data.get(0).getPlayer());
@@ -104,7 +112,8 @@ public class Arena {
 		this.state = ArenaState.COUNTING_DOWN;
 		for (Sign s : signs) {
 			s.setLine(3, getState().toString());
-			s.update();
+			s.update(true);
+			System.out.println(s.getLine(3));
 		}
 		new Countdown(
 				30,
@@ -130,9 +139,11 @@ public class Arena {
 		this.state = ArenaState.WAITING;
 		for (Sign s : signs) {
 			s.setLine(3, getState().toString());
-			s.update();
+			s.setLine(2, "0 Players");
+			s.update(true);
+			System.out.println(s.getLine(3));
 		}
-
+		MessageManager.getInstance().broadcast(MessageType.GOOD, "Arena " + id + " has been stopped!");
 	}
 
 	public void stop() {
@@ -143,8 +154,11 @@ public class Arena {
 		state = ArenaState.WAITING;
 		for (Sign s : signs) {
 			s.setLine(3, getState().toString());
-			s.update();
+			s.setLine(2, "0 Players");
+			s.update(true);
+			System.out.println(s.getLine(3));
 		}
+		MessageManager.getInstance().broadcast(MessageType.GOOD, "Arena " + id + " has been stopped!");
 	}
 
 	public boolean containsPlayer(Player p) {
@@ -179,10 +193,20 @@ public class Arena {
 				}
 				a.sendMessage(MessageType.GOOD, "The game has begun!");
 				a.state = ArenaState.STARTED;
+				for (Sign s : signs) {
+					s.setLine(3, getState().toString());
+					s.update(true);
+					System.out.println(s.getLine(3));
+				}
 				cancel();
 			}
 			if (countingNums.contains(timer)) {
 				a.sendMessage(MessageType.INFO, msg.replaceAll("%t", timer + ""));
+				for (Sign s : signs) {
+					s.setLine(3, "Starting in " + timer);
+					s.update(true);
+				}
+
 			}
 			timer--;
 		}
