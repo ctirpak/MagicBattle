@@ -1,6 +1,7 @@
 package com.github.ctirpak.magicbattle;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,6 +16,8 @@ import com.github.ctirpak.magicbattle.listeners.SignManager;
 
 public class Arena {
 
+	private static final Logger logger = Logger.getLogger(MagicBattle.class.getName());
+	
 	public enum ArenaState {DISABLED, WAITING, COUNTING_DOWN, STARTED;}
 
 	private int id;
@@ -26,6 +29,7 @@ public class Arena {
 	protected ArenaState state = ArenaState.DISABLED;
 
 	protected Arena(int id) {
+		
 		this.id = id;
 		this.data = new ArrayList<PlayerData>();
 		this.numPlayers = SettingsManager.getArenas().get("arenas." + id + ".numPlayers");
@@ -51,7 +55,7 @@ public class Arena {
 	}
 
 	public void addPlayer(Player p) {
-		System.out.println("addPlayer");
+		logger.info("addPlayer");
 		if (currentPlayers >= numPlayers) {
 			MessageManager.getInstance().msg(p, MessageType.BAD, "There are too many players");
 			return;
@@ -74,8 +78,8 @@ public class Arena {
 		}
 		p.teleport(spawnPoint);
 		currentPlayers++;
-		System.out.println("Player count: " + currentPlayers);
-		System.out.println("Sign count: " + signs.size());
+		logger.info("Player count: " + currentPlayers);
+		logger.info("Sign count: " + signs.size());
 		for (Sign s : signs) {
 			s.setLine(2, currentPlayers + " Players");
 			s.update(true);
@@ -91,7 +95,7 @@ public class Arena {
 		for (Sign s : signs) {
 			s.setLine(2, currentPlayers + " Players");
 			s.update(true);
-			System.out.println(s.getLine(2));
+			logger.info(s.getLine(2));
 		}
 		if (currentPlayers == 1) {
 			stop(data.get(0).getPlayer());
@@ -113,7 +117,7 @@ public class Arena {
 		for (Sign s : signs) {
 			s.setLine(3, getState().toString());
 			s.update(true);
-			System.out.println(s.getLine(3));
+			logger.info(s.getLine(3));
 		}
 		new Countdown(
 				30,
@@ -141,7 +145,7 @@ public class Arena {
 			s.setLine(3, getState().toString());
 			s.setLine(2, "0 Players");
 			s.update(true);
-			System.out.println(s.getLine(3));
+			logger.info(s.getLine(3));
 		}
 		MessageManager.getInstance().broadcast(MessageType.GOOD, "Arena " + id + " has been stopped!");
 	}
@@ -156,7 +160,7 @@ public class Arena {
 			s.setLine(3, getState().toString());
 			s.setLine(2, "0 Players");
 			s.update(true);
-			System.out.println(s.getLine(3));
+			logger.info(s.getLine(3));
 		}
 		MessageManager.getInstance().broadcast(MessageType.GOOD, "Arena " + id + " has been stopped!");
 	}
@@ -196,7 +200,7 @@ public class Arena {
 				for (Sign s : signs) {
 					s.setLine(3, getState().toString());
 					s.update(true);
-					System.out.println(s.getLine(3));
+					logger.info(s.getLine(3));
 				}
 				cancel();
 			}

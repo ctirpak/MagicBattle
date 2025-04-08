@@ -2,6 +2,7 @@ package com.github.ctirpak.magicbattle.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.github.ctirpak.magicbattle.Arena;
 import com.github.ctirpak.magicbattle.ArenaManager;
 import com.github.ctirpak.magicbattle.LocationUtil;
+import com.github.ctirpak.magicbattle.MagicBattle;
 import com.github.ctirpak.magicbattle.MessageManager;
 import com.github.ctirpak.magicbattle.MessageManager.MessageType;
 import com.github.ctirpak.magicbattle.SettingsManager;
@@ -25,6 +27,8 @@ public class SignManager implements Listener {
 	 * Saving and Loading signs
 	 * Setting signs
 	 */
+	
+	private static final Logger logger = Logger.getLogger(MagicBattle.class.getName());
 	
 	private static HashMap<Sign, Integer> signs = new HashMap<Sign, Integer>();
 	
@@ -49,31 +53,31 @@ public class SignManager implements Listener {
 		
 		//loads signs
 		for(String str : SettingsManager.getLobbySigns().<ConfigurationSection>get("signs").getKeys(false)) {
-			System.out.println("lobby sign: " + str);
+			logger.info("lobby sign: " + str);
 			ConfigurationSection section = SettingsManager.getLobbySigns().get("signs." + str);
-			System.out.println("lobby sign: " + str + " section: " + section);
+			logger.info("lobby sign: " + str + " section: " + section);
 			
 			Location loc = LocationUtil.locationFromConfig(section.getConfigurationSection("location"), false);
-			System.out.println("config section: " + section.getConfigurationSection("location"));
-			System.out.println("location: " + loc);
+			logger.info("config section: " + section.getConfigurationSection("location"));
+			logger.info("location: " + loc);
 			Sign s = (Sign) loc.getBlock().getState();
 			
-			System.out.println("Sign: " + s.getLine(0).toString() + "; " + s.getLine(1).toString() + "; " + s.getLine(2).toString() + "; " + s.getLine(3).toString() + "; ");
+			logger.info("Sign: " + s.getLine(0).toString() + "; " + s.getLine(1).toString() + "; " + s.getLine(2).toString() + "; " + s.getLine(3).toString() + "; ");
 			signs.put(s, section.getInt("arenaNumber"));
-			System.out.println("Arena Number: " + section.getInt("arenaNumber"));
+			logger.info("Arena Number: " + section.getInt("arenaNumber"));
 		}
-		System.out.println("Sign count: " + signs.size());
+		logger.info("Sign count: " + signs.size());
 	}
 	
 	public static ArrayList<Sign> getSigns(Arena a) {
 		ArrayList<Sign> s = new ArrayList<Sign>();
-		System.out.println("getSigns:");
+		logger.info("getSigns:");
 		for(Sign sign : signs.keySet()) {
-			System.out.println("Sign: " + sign.toString());
-			System.out.println("Arena ID: " + a.getID());
-			System.out.println("Sign: " + sign);
-			System.out.println("Sign: " + signs.get(sign));
-			System.out.println("Arena ID Calc: " + ArenaManager.getInstance().getArena(signs.get(sign)));
+			logger.info("Sign: " + sign.toString());
+			logger.info("Arena ID: " + a.getID());
+			logger.info("Sign: " + sign);
+			logger.info("Sign: " + signs.get(sign));
+			logger.info("Arena ID Calc: " + ArenaManager.getInstance().getArena(signs.get(sign)));
 //			if(ArenaManager.getInstance().getArena(signs.get(sign)) == a) {
 			if(signs.get(sign) == a.getID()) {
 				s.add(sign);
