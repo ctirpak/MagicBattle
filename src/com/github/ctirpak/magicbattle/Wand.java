@@ -34,11 +34,17 @@ public enum Wand {
 	 * The Fire wand launches a fiery projectile (Fireball) that can set blocks on fire.
 	 */
 	FIRE("Fire", ChatColor.RED, new WandRunnable() {
+		private final float MANA_COST = 15.0F;
 		@Override
 		public void run(PlayerInteractEvent e) {
-			Fireball fb = e.getPlayer().launchProjectile(Fireball.class);
-			fb.setIsIncendiary(true);
-			fb.setYield(1F);
+			Arena a = ArenaManager.getInstance().getArena(e.getPlayer());
+			if (a.useMana(e.getPlayer(), MANA_COST)) {
+				Fireball fb = e.getPlayer().launchProjectile(Fireball.class);
+				fb.setIsIncendiary(true);
+				fb.setYield(1F);				
+			} else {
+				MessageManager.getInstance().msg(e.getPlayer(), MessageType.BAD, ChatColor.RED + "Not enough mana!");
+			}
 		}
 	}),
 	/**
@@ -47,17 +53,23 @@ public enum Wand {
 	 * to both the caster and the poisoned players.
 	 */
 	POISON("Poison", ChatColor.DARK_PURPLE, new WandRunnable() {
+		private final float MANA_COST = 10.0F;
 		@Override
 		public void run(PlayerInteractEvent e) {
-			Fireball fb = e.getPlayer().launchProjectile(Fireball.class);
-			fb.setIsIncendiary(false);
-			fb.setYield(0F);
-			for (Entity en : e.getPlayer().getNearbyEntities(10, 10, 10)) {
-				if (en instanceof Player) {
-					((Player) en).addPotionEffect(new PotionEffect(PotionEffectType.POISON, 10, 1));
-					MessageManager.getInstance().msg(e.getPlayer(), MessageType.INFO, ChatColor.DARK_PURPLE + "You have been poisoned by " + e.getPlayer().getName() + "!");
-					MessageManager.getInstance().msg(e.getPlayer(), MessageType.INFO, ChatColor.DARK_PURPLE + "You have poisoned " + ((Player) en).getName() + "!");
+			Arena a = ArenaManager.getInstance().getArena(e.getPlayer());
+			if (a.useMana(e.getPlayer(), MANA_COST)) {
+				Fireball fb = e.getPlayer().launchProjectile(Fireball.class);
+				fb.setIsIncendiary(false);
+				fb.setYield(0F);
+				for (Entity en : e.getPlayer().getNearbyEntities(10, 10, 10)) {
+					if (en instanceof Player) {
+						((Player) en).addPotionEffect(new PotionEffect(PotionEffectType.POISON, 10, 1));
+						MessageManager.getInstance().msg(e.getPlayer(), MessageType.INFO, ChatColor.DARK_PURPLE + "You have been poisoned by " + e.getPlayer().getName() + "!");
+						MessageManager.getInstance().msg(e.getPlayer(), MessageType.INFO, ChatColor.DARK_PURPLE + "You have poisoned " + ((Player) en).getName() + "!");
+					}
 				}
+			} else {
+				MessageManager.getInstance().msg(e.getPlayer(), MessageType.BAD, ChatColor.RED + "Not enough mana!");
 			}
 		}
 
@@ -69,6 +81,7 @@ public enum Wand {
 	 * and speed. Debugging information about the launched TNT's velocity is logged.
 	 */
 	EXPLODE("Explode", ChatColor.DARK_RED, new WandRunnable() {
+		private final float MANA_COST = 25.0F;
 		private final Random random = new Random();
 		private final double BASE_MULTIPLIER = 2.0;
 		private final double MAX_ANGLE_VARIANCE = 15.0; // Maximum angle in degrees for horizontal/vertical shift
@@ -77,37 +90,42 @@ public enum Wand {
 
 		@Override
 		public void run(PlayerInteractEvent e) {
-			for (int x = 0; x < 3; x++) {
-				TNTPrimed tnt = e.getPlayer().getWorld().spawn(e.getPlayer().getLocation(), TNTPrimed.class);
-				tnt.setFuseTicks(80);
+			Arena a = ArenaManager.getInstance().getArena(e.getPlayer());
+			if (a.useMana(e.getPlayer(), MANA_COST)) {
+				for (int x = 0; x < 3; x++) {
+					TNTPrimed tnt = e.getPlayer().getWorld().spawn(e.getPlayer().getLocation(), TNTPrimed.class);
+					tnt.setFuseTicks(80);
 
-				Vector baseDirection = e.getPlayer().getEyeLocation().getDirection();
+					Vector baseDirection = e.getPlayer().getEyeLocation().getDirection();
 
-				// Apply random angle variance
-				double horizontalAngle = Math.toRadians((random.nextDouble() * 2 - 1) * MAX_ANGLE_VARIANCE);
-				double verticalAngle = Math.toRadians((random.nextDouble() * 2 - 1) * MAX_ANGLE_VARIANCE);
+					// Apply random angle variance
+					double horizontalAngle = Math.toRadians((random.nextDouble() * 2 - 1) * MAX_ANGLE_VARIANCE);
+					double verticalAngle = Math.toRadians((random.nextDouble() * 2 - 1) * MAX_ANGLE_VARIANCE);
 
-				// Rotate the base direction vector
-				Vector rotatedDirection = baseDirection.clone();
-				rotatedDirection.rotateAroundY(horizontalAngle);
+					// Rotate the base direction vector
+					Vector rotatedDirection = baseDirection.clone();
+					rotatedDirection.rotateAroundY(horizontalAngle);
 
-				// To rotate around the horizontal axis (pitch), we need a temporary axis
-				Vector right = rotatedDirection.clone().crossProduct(new Vector(0, 1, 0)).normalize();
-				rotatedDirection.rotateAroundAxis(right, verticalAngle);
+					// To rotate around the horizontal axis (pitch), we need a temporary axis
+					Vector right = rotatedDirection.clone().crossProduct(new Vector(0, 1, 0)).normalize();
+					rotatedDirection.rotateAroundAxis(right, verticalAngle);
 
-				// Apply random velocity variance
-				double velocityMultiplier = BASE_MULTIPLIER + (random.nextDouble() * 2 - 1) * MAX_VELOCITY_VARIANCE;
-				if (velocityMultiplier <= 0) {
-					velocityMultiplier = 0.1; // Ensure velocity isn't zero or negative
+					// Apply random velocity variance
+					double velocityMultiplier = BASE_MULTIPLIER + (random.nextDouble() * 2 - 1) * MAX_VELOCITY_VARIANCE;
+					if (velocityMultiplier <= 0) {
+						velocityMultiplier = 0.1; // Ensure velocity isn't zero or negative
+					}
+
+					// Set the final velocity
+					Vector finalVelocity = rotatedDirection.multiply(velocityMultiplier);
+					tnt.setVelocity(finalVelocity);
+
+					// Use the logger for debugging output
+					logger.info("Launched TNT #" + (x + 1) + " with velocity: " + finalVelocity.toString());
+
 				}
-
-				// Set the final velocity
-				Vector finalVelocity = rotatedDirection.multiply(velocityMultiplier);
-				tnt.setVelocity(finalVelocity);
-
-				// Use the logger for debugging output
-				logger.info("Launched TNT #" + (x + 1) + " with velocity: " + finalVelocity.toString());
-
+			} else {
+				MessageManager.getInstance().msg(e.getPlayer(), MessageType.BAD, ChatColor.RED + "Not enough mana!");
 			}
 		}
 
@@ -117,7 +135,6 @@ public enum Wand {
 	private WandRunnable run;
 
 	private static final Logger logger = Logger.getLogger(MagicBattle.class.getName());
-
 
 	/**
 	 * Constructor for the {@code Wand} enum.

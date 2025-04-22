@@ -138,6 +138,10 @@ public class Arena {
 		}
 		// Teleport the player to the arena's spawn point.
 		p.teleport(spawnPoint);
+
+		p.setHealth(20f);
+		p.setFoodLevel(20);
+		
 		currentPlayers++;
 		logger.info("Player count: " + currentPlayers);
 		logger.info("Sign count: " + signs.size());
@@ -214,6 +218,9 @@ public class Arena {
 				3,
 				2,
 				1).runTaskTimer(MagicBattle.getPlugin(), 0, 20);
+
+		new ManaRegenerationTask(this).runTaskTimer(MagicBattle.getPlugin(), 0, 20);
+
 	}
 
 	/**
@@ -272,6 +279,21 @@ public class Arena {
 	public boolean containsPlayer(Player p) {
 		return getPlayerData(p) != null;
 	}
+	
+	public boolean useMana(Player p, float cost) {
+		PlayerData d = getPlayerData(p);
+		float cm = d.getCurrentMana();
+		float mm = d.getMaxMana();
+		float exp = cm/mm;
+		logger.info(d.getPlayerName() +"|"+ cm +"|"+ mm +"|"+ exp);
+		if (cm >= cost) {
+			d.reduceMana(cost);
+			p.setExp(exp);
+			p.setLevel(0);
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Sends a formatted message to all players currently in this arena.
@@ -285,6 +307,29 @@ public class Arena {
 		}
 	}
 
+	private class ManaRegenerationTask extends BukkitRunnable {
+		private final Arena arena;
+		private final double REGEN_RATE = 5.0f;
+		
+		public ManaRegenerationTask(Arena arena) {
+			this.arena = arena;
+		}
+		
+		public void run() {
+			for (PlayerData playerData : arena.data) {
+	            float currentMana = playerData.getCurrentMana();
+	            float maxMana = playerData.getMaxMana();
+	            
+	            if (currentMana < maxMana) {
+	                playerData.setCurrentMana((float) Math.min(currentMana + REGEN_RATE, maxMana));
+	                Player player = playerData.getPlayer();
+	                float progress = (currentMana / maxMana);
+	                player.setExp(progress);
+	                player.setLevel(0);
+	            }
+	        }
+		}
+	}
 	/**
 	 * A nested class that handles the countdown sequence before a game starts.
 	 */
@@ -358,6 +403,9 @@ class PlayerData {
 	private ItemStack[] contents;
 	private ItemStack[] armorContents;
 	private Location location;
+	private float currentMana;
+
+	private static final float MAX_MANA = 100F;
 
 	/**
 	 * Constructor for the {@code PlayerData} class.
@@ -369,7 +417,25 @@ class PlayerData {
 		this.contents = p.getInventory().getContents();
 		this.armorContents = p.getInventory().getArmorContents();
 		this.location = p.getLocation();
+
+		currentMana = 0.1F;
 	}
+	
+	protected float getCurrentMana() {
+		return currentMana;
+	}
+	
+	protected void setCurrentMana(float mana) {
+		currentMana = mana;
+	}
+	protected float getMaxMana() {
+		return MAX_MANA;
+	}
+
+	protected void reduceMana(float cost) {
+		currentMana -= cost;
+	}
+	
 
 	/**
 	 * Gets the {@link Player} object associated with this data.
