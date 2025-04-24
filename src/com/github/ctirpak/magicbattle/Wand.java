@@ -12,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
+import org.bukkit.entity.SpectralArrow;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -40,7 +41,7 @@ public enum Wand {
 	 * The Fire wand launches a fiery projectile (Fireball) that can set blocks on
 	 * fire.
 	 */
-	FIRE("Fire", ChatColor.RED, 15f, new WandRunnable() {
+	FIRE("Fire", ChatColor.RED, 15f, Material.FIRE_CHARGE, new WandRunnable() {
 		@Override
 		public void run(PlayerInteractEvent e) {
 			Fireball fb = e.getPlayer().launchProjectile(Fireball.class);
@@ -53,7 +54,7 @@ public enum Wand {
 	 * effect to nearby players within a 10-block radius. It also sends messages to
 	 * both the caster and the poisoned players.
 	 */
-	POISON("Poison", ChatColor.DARK_PURPLE, 10f, new WandRunnable() {
+	POISON("Poison", ChatColor.DARK_PURPLE, 10f, Material.STICK, new WandRunnable() {
 		@Override
 		public void run(PlayerInteractEvent e) {
 			Fireball fb = e.getPlayer().launchProjectile(Fireball.class);
@@ -78,7 +79,7 @@ public enum Wand {
 	 * variance in angle and speed. Debugging information about the launched TNT's
 	 * velocity is logged.
 	 */
-	EXPLODE("Explode", ChatColor.DARK_RED, 25f, new WandRunnable() {
+	EXPLODE("Explode", ChatColor.DARK_RED, 25f, Material.TNT, new WandRunnable() {
 		private final Random random = new Random();
 		private final double BASE_MULTIPLIER = 2.0;
 		private final double MAX_ANGLE_VARIANCE = 15.0; // Maximum angle in degrees for horizontal/vertical shift
@@ -121,7 +122,7 @@ public enum Wand {
 		}
 
 	}),
-	ARROW("Arrow",ChatColor.GOLD, 10f, new WandRunnable() {
+	ARROW("Arrow",ChatColor.GOLD, 10f, Material.BOW, new WandRunnable() {
 		private final double DAMAGE_MULTIPLIER = 2.0;
 		private final int FIRE_TICKS = 60; // 3 seconds
 		private final double SPEED_MULTIPLIER = 3;
@@ -131,7 +132,7 @@ public enum Wand {
 		@Override
 		public void run(PlayerInteractEvent e) {
 			Player player = e.getPlayer();
-			Arrow arrow = player.launchProjectile(Arrow.class);
+			SpectralArrow arrow = player.launchProjectile(SpectralArrow.class);
 			arrow.setFireTicks(FIRE_TICKS);
 			arrow.setDamage(arrow.getDamage() * DAMAGE_MULTIPLIER);
 			
@@ -150,7 +151,7 @@ public enum Wand {
 			arrow.setVelocity(velocity);
 		}
 	}),
-    ICE_BOLT("Ice Bolt", ChatColor.AQUA, 7.0f, new WandRunnable() {
+    ICE_BOLT("Ice Bolt", ChatColor.AQUA, 7.0f, Material.STICK, new WandRunnable() {
         private final double DAMAGE_MULTIPLIER = 1.5;
         private final int FREEZE_DURATION = 40; // Ticks (2 seconds)
 
@@ -168,7 +169,7 @@ public enum Wand {
             //  and if so, apply the freeze.
         }
     }),
-    ZOOM("Zoom", ChatColor.DARK_PURPLE, 0.0f, new WandRunnable() { // 0.0f damage because it doesn't directly deal damage
+    ZOOM("Zoom", ChatColor.DARK_PURPLE, 0.0f, Material.STICK, new WandRunnable() { // 0.0f damage because it doesn't directly deal damage
         private final int SLOWNESS_DURATION = 60; // Ticks (1 second)
         private final int SLOWNESS_AMPLIFIER = 255; // Level 2 slowness
 
@@ -186,6 +187,7 @@ public enum Wand {
 	private String name;
 	private ChatColor color;
 	private float manaCost;
+	private Material material;
 	private WandRunnable run;
 
 	private static final Logger logger = Logger.getLogger(MagicBattle.class.getName());
@@ -198,10 +200,11 @@ public enum Wand {
 	 * @param manaCost The mana cost to use the wand
 	 * @param run      The {@link WandRunnable} that defines the action of the wand.
 	 */
-	Wand(String name, ChatColor color, float manaCost, WandRunnable run) {
+	Wand(String name, ChatColor color, float manaCost, Material material, WandRunnable run) {
 		this.name = name;
 		this.color = color;
 		this.manaCost = manaCost;
+		this.material = material;
 		this.run = run;
 	}
 
@@ -265,12 +268,7 @@ public enum Wand {
 	 * @return The {@link ItemStack} representing the wand.
 	 */
 	public ItemStack createItemStack() {
-		Material material = Material.STICK;
-		if (this == ARROW) {
-			material = Material.ARROW;
-		}
-		
-		ItemStack i = new ItemStack(material, 1);
+		ItemStack i = new ItemStack(this.material, 1);
 		ItemMeta im = i.getItemMeta();
 		im.setDisplayName(getFullName());
 		im.setLore(Arrays.asList("A Magic Wand!"));

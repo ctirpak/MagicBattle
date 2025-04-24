@@ -48,9 +48,9 @@ public class PlayerInteract implements Listener {
 		if (ArenaManager.getInstance().getArena(e.getPlayer()) == null) return;
 		// Only process right-click interactions.
 		if (!(e.getAction() == Action.RIGHT_CLICK_AIR) && !(e.getAction() == Action.RIGHT_CLICK_BLOCK) && !(e.getAction() == Action.LEFT_CLICK_AIR) && !(e.getAction() == Action.LEFT_CLICK_BLOCK)) return;
-		// Only process interactions with a stick or arrow in the main hand.
-		Material m = e.getPlayer().getInventory().getItemInMainHand().getType();
-		if (!(m == Material.STICK || m == Material.ARROW)) return;
+//		// Only process interactions with a stick or arrow in the main hand.
+//		Material m = e.getPlayer().getInventory().getItemInMainHand().getType();
+//		if (!(m == Material.STICK || m == Material.ARROW)) return;
 
 
 		ItemMeta stickMeta = e.getItem().getItemMeta();
