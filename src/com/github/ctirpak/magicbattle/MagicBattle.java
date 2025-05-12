@@ -49,6 +49,9 @@ public class MagicBattle extends JavaPlugin {
 
 		// Load arena configurations from the plugin's settings.
 		ArenaManager.getInstance().setupArenas();
+		
+		// Load kits from the plugin's settings.
+		KitManager.loadKits();
 
 		// Set the executor for the main "magicbattle" command.
 		getCommand("magicbattle").setExecutor(new CommandManager());

@@ -29,6 +29,8 @@ public class SettingsManager {
 	 * lobby sign settings, stored in the "lobbysigns.yml" file.
 	 */
 	private static SettingsManager lobbySigns = new SettingsManager("lobbysigns");
+	
+	private static SettingsManager kits = new SettingsManager("kits");
 
 	private File file;
 	private FileConfiguration config;
@@ -78,6 +80,14 @@ public class SettingsManager {
 	 */
 	public static SettingsManager getLobbySigns() {
 		return lobbySigns;
+	}
+	/**
+	 * Gets the static instance of {@code SettingsManager} for managing kit settings.
+	 *
+	 * @return The {@code SettingsManager} instance for "kits.yml".
+	 */
+	public static SettingsManager getKits() {
+		return kits;
 	}
 
 	/**

@@ -1,13 +1,11 @@
-package com.github.ctirpak.magicbattle;
+package com.github.ctirpak.magicbattle.kits;
 
 import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
@@ -19,9 +17,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import com.github.ctirpak.magicbattle.Arena;
+import com.github.ctirpak.magicbattle.ArenaManager;
+import com.github.ctirpak.magicbattle.MagicBattle;
+import com.github.ctirpak.magicbattle.MessageManager;
 import com.github.ctirpak.magicbattle.MessageManager.MessageType;
 
 /**
@@ -170,8 +171,8 @@ public enum Wand {
         }
     }),
     ZOOM("Zoom", ChatColor.DARK_PURPLE, 0.0f, Material.STICK, new WandRunnable() { // 0.0f damage because it doesn't directly deal damage
-        private final int SLOWNESS_DURATION = 60; // Ticks (1 second)
-        private final int SLOWNESS_AMPLIFIER = 255; // Level 2 slowness
+        private final int SLOWNESS_DURATION = 60; // Ticks
+        private final int SLOWNESS_AMPLIFIER = 255; // Level
 
         @Override
         public void run(PlayerInteractEvent e) {

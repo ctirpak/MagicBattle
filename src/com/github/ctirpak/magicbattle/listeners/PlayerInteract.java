@@ -11,7 +11,7 @@ import com.github.ctirpak.magicbattle.Arena.ArenaState;
 import com.github.ctirpak.magicbattle.ArenaManager;
 import com.github.ctirpak.magicbattle.MessageManager;
 import com.github.ctirpak.magicbattle.MessageManager.MessageType;
-import com.github.ctirpak.magicbattle.Wand;
+import com.github.ctirpak.magicbattle.kits.Wand;
 
 /**
  * This class implements the {@link Listener} interface to handle player

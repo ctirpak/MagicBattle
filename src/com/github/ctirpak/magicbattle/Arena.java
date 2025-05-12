@@ -133,9 +133,12 @@ public class Arena {
 
 		// Clear the player's inventory and give them wands.
 		p.getInventory().clear();
-		for (Wand w : Wand.values()) {
-			p.getInventory().addItem(w.createItemStack());
-		}
+		KitManager.getInstance().getKit("wands").applyToPlayer(p);
+		getPlayerData(p).setKitName("wands");
+		
+//		for (Wand w : Wand.values()) {
+//			p.getInventory().addItem(w.createItemStack());
+//		}
 		// Teleport the player to the arena's spawn point.
 		p.teleport(spawnPoint);
 
@@ -404,6 +407,7 @@ class PlayerData {
 	private ItemStack[] armorContents;
 	private Location location;
 	private float currentMana;
+	private String kitName;
 
 	private static final float MAX_MANA = 100F;
 
@@ -475,5 +479,12 @@ class PlayerData {
 	 */
 	protected boolean isForPlayer(Player p) {
 		return playerName.equalsIgnoreCase(p.getName());
+	}
+	
+	protected void setKitName(String kitName) {
+		this.kitName = kitName;
+	}
+	protected String getKitName() {
+		return kitName;
 	}
 }
